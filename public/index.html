@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoreo de Cannabis Medicinal</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    :root {
+      --verde-primario: #28a745;
+      --verde-secundario: #218838;
+      --verde-oscuro: #1e7e34;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      padding-top: 56px;
+    }
+    
+    .navbar {
+      background-color: var(--verde-oscuro) !important;
+    }
+    
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                  url('https://images.unsplash.com/photo-1598805296328-3180a6eb5cfb') no-repeat center center;
+      background-size: cover;
+      color: white;
+      padding: 100px 0;
+      text-align: center;
+    }
+    
+    .planta-card {
+      border-left: 5px solid var(--verde-primario);
+      transition: transform 0.3s;
+    }
+    
+    .planta-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .progress {
+      height: 10px;
+    }
+    
+    .badge-etapa {
+      background-color: var(--verde-secundario);
+    }
+    
+    .modal-plantas {
+      max-width: 800px;
+    }
+    
+    .tabla-condiciones th {
+      background-color: var(--verde-primario);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar modificado -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-leaf me-2"></i>GreenTrack
+      </a>
+      
+      <!-- Botón de monitoreo climático -->
+      <button id="climaBtn" class="nav-link btn btn-outline-light position-relative ms-auto me-2 d-none">
+        <i class="fas fa-cloud-sun"></i> Clima
+      </button>
+      
+      <!-- Botón de inicio de sesión / perfil -->
+      <div id="loginBtn">
+        <button class="btn btn-link text-white" data-bs-toggle="modal" data-bs-target="#authModal">
+          <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+        </button>
+      </div>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#mis-plantas">Mis Plantas</a></li>
+          <li class="nav-item"><a class="nav-link" href="#monitoreo">Monitoreo</a></li>
+          <li class="nav-item"><a class="nav-link" href="#calendario">Calendario</a></li>
+          <!-- Panel de administración (visible solo para administradores) -->
+          <li class="nav-item" id="adminPanelLink"><a class="nav-link" href="ad.html">Administración</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Modal de autenticación (se mantiene igual) -->
+  <div class="modal fade" id="authModal" tabindex="-1">
+    <!-- ... mismo contenido de authModal ... -->
+  </div>
+
+  <!-- Modal para agregar nueva planta -->
+  <div class="modal fade" id="nuevaPlantaModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-plantas">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Registrar Nueva Planta</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="plantaForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Nombre Identificador</label>
+                  <input type="text" class="form-control" id="nombrePlanta" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Variedad</label>
+                  <select class="form-select" id="variedad" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="sativa">Sativa</option>
+                    <option value="indica">Indica</option>
+                    <option value="hibrida">Híbrida</option>
+                    <option value="cbd">Alto CBD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Fecha de Siembra</label>
+                  <input type="date" class="form-control" id="fechaSiembra" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Propósito</label>
+                  <select class="form-select" id="proposito" required>
+                    <option value="medicinal">Medicinal</option>
+                    <option value="alimenticio">Alimenticio</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Notas Adicionales</label>
+              <textarea class="form-control" id="notasPlanta" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="guardarPlanta">Guardar Planta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de monitoreo climático -->
+  <div class="modal fade" id="climaModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">Condiciones Climáticas</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <i class="fas fa-cloud-sun fa-4x text-info mb-3"></i>
+            <h3 id="temperaturaActual">Cargando...</h3>
+            <p id="condicionesClima"></p>
+          </div>
+          <div class="alert alert-warning" id="alertasClima">
+            <!-- Alertas dinámicas se insertarán aquí -->
+          </div>
+          <h5 class="mt-4">Recomendaciones</h5>
+          <ul class="list-group" id="recomendacionesClima">
+            <!-- Recomendaciones dinámicas -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección Hero modificada -->
+  <section class="hero" id="inicio">
+    <div class="container text-center">
+      <h1 class="display-4 fw-bold">Monitoreo de Cannabis Medicinal</h1>
+      <p class="lead">Sistema profesional para el seguimiento y cuidado de tus plantas</p>
+      <div class="mt-4">
+        <a href="#mis-plantas" class="btn btn-success btn-lg me-2">
+          <i class="fas fa-seedling me-1"></i> Mis Plantas
+        </a>
+        <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#nuevaPlantaModal">
+          <i class="fas fa-plus me-1"></i> Nueva Planta
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Mis Plantas -->
+  <section id="mis-plantas" class="py-5 bg-light">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Mis Plantas</h2>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevaPlantaModal">
+          <i class="fas fa-plus me-1"></i> Agregar Planta
+        </button>
+      </div>
+      
+      <div class="row" id="plantasContainer">
+        <!-- Plantas se cargarán dinámicamente aquí -->
+        <div class="col-12 text-center py-5" id="sinPlantas">
+          <i class="fas fa-seedling fa-4x text-muted mb-3"></i>
+          <h4 class="text-muted">No tienes plantas registradas</h4>
+          <p class="text-muted">Comienza agregando tu primera planta para monitorear su crecimiento</p>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#nuevaPlantaModal">
+            <i class="fas fa-plus me-1"></i> Agregar Primera Planta
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Monitoreo -->
+  <section id="monitoreo" class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">Monitoreo de Condiciones</h2>
+      
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-header bg-info text-white">
+              <i class="fas fa-temperature-low me-2"></i> Condiciones Actuales
+            </div>
+            <div class="card-body">
+              <div class="text-center mb-3">
+                <i class="fas fa-cloud-sun fa-3x text-info"></i>
+                <h3 class="mt-2" id="tempActual">--°C</h3>
+                <p id="humedadActual">Humedad: --%</p>
+              </div>
+              <button class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#climaModal">
+                <i class="fas fa-chart-line me-1"></i> Ver Detalles Climáticos
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-header bg-warning text-dark">
+              <i class="fas fa-exclamation-triangle me-2"></i> Alertas
+            </div>
+            <div class="card-body">
+              <div id="alertasContainer">
+                <div class="alert alert-warning">
+                  <i class="fas fa-info-circle me-2"></i> Completa el registro de tus plantas para recibir alertas personalizadas
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card mt-4">
+        <div class="card-header bg-success text-white">
+          <i class="fas fa-chart-bar me-2"></i> Histórico de Condiciones
+        </div>
+        <div class="card-body">
+          <canvas id="historicoChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Calendario -->
+  <section id="calendario" class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Calendario de Cuidados</h2>
+      
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <i class="fas fa-calendar-alt me-2"></i> Próximas Acciones
+            </div>
+            <div class="card-body">
+              <div id="calendarioContainer">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Planta</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tareasCalendario">
+                    <tr>
+                      <td colspan="3" class="text-center py-4">
+                        <i class="fas fa-calendar-plus fa-2x text-muted mb-2"></i>
+                        <p class="text-muted">No hay tareas programadas</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-light py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5><i class="fas fa-leaf me-2"></i>GreenTrack</h5>
+          <p>Sistema profesional de monitoreo de cannabis medicinal.</p>
+        </div>
+        <div class="col-md-3">
+          <h5>Enlaces</h5>
+          <ul class="list-unstyled">
+            <li><a href="#inicio" class="text-light">Inicio</a></li>
+            <li><a href="#mis-plantas" class="text-light">Mis Plantas</a></li>
+            <li><a href="#monitoreo" class="text-light">Monitoreo</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h5>Legal</h5>
+          <p class="small text-muted">Solo para uso en lugares donde el cultivo de cannabis medicinal está permitido por la ley.</p>
+        </div>
+      </div>
+      <hr class="my-4 bg-secondary">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2023 GreenTrack. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Variables de estado
+    let plantas = [];
+    let currentUser = null;
+    let condicionesClima = null;
+    
+    // Elementos del DOM
+    const plantasContainer = document.getElementById('plantasContainer');
+    const sinPlantas = document.getElementById('sinPlantas');
+    const climaBtn = document.getElementById('climaBtn');
+    
+    // Verificar autenticación al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      cargarPlantas();
+      obtenerClima();
+      inicializarChart();
+      
+      // Configurar evento para guardar planta
+      document.getElementById('guardarPlanta').addEventListener('click', guardarPlanta);
+      
+      // Configurar evento para botón de clima
+      climaBtn.addEventListener('click', () => {
+        actualizarModalClima();
+      });
+    });
+    
+    // Función para verificar autenticación
+    function checkAuth() {
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        currentUser = JSON.parse(user);
+        climaBtn.classList.remove('d-none');
+        actualizarUI();
+      }
+    }
+    
+    // Función para actualizar la interfaz
+    function actualizarUI() {
+      const loginBtn = document.getElementById('loginBtn');
+      
+      if (currentUser) {
+        loginBtn.innerHTML = `
+          <div class="dropdown">
+            <button class="btn btn-link text-white dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i> ${currentUser.name}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión</a></li>
+            </ul>
+          </div>
+        `;
+        
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+      }
+    }
+    
+    // Función para cerrar sesión
+    function logout() {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      window.location.reload();
+    }
+    
+    // Función para cargar plantas desde el backend
+    async function cargarPlantas() {
+      if (!currentUser) return;
+      
+      try {
+        // Simulación de carga desde API
+        // En producción, usarías: const response = await fetch(`/api/plantas?usuario=${currentUser.id}`);
+        // plantas = await response.json();
+        
+        // Datos de ejemplo
+        plantas = [
+          {
+            id: 1,
+            nombre: "Planta CBD 1",
+            variedad: "cbd",
+            fechaSiembra: "2023-05-15",
+            proposito: "medicinal",
+            progreso: 65,
+            etapa: "Floración",
+            tempIdeal: 24,
+            humedadIdeal: 50
+          },
+          {
+            id: 2,
+            nombre: "Híbrida Medicinal",
+            variedad: "hibrida",
+            fechaSiembra: "2023-06-20",
+            proposito: "medicinal",
+            progreso: 35,
+            etapa: "Crecimiento",
+            tempIdeal: 26,
+            humedadIdeal: 60
+          }
+        ];
+        
+        mostrarPlantas();
+      } catch (error) {
+        console.error("Error al cargar plantas:", error);
+      }
+    }
+    
+    // Función para mostrar plantas en la interfaz
+    function mostrarPlantas() {
+      if (plantas.length === 0) {
+        sinPlantas.style.display = 'block';
+        plantasContainer.innerHTML = '';
+        return;
+      }
+      
+      sinPlantas.style.display = 'none';
+      plantasContainer.innerHTML = '';
+      
+      plantas.forEach(planta => {
+        const card = document.createElement('div');
+        card.className = 'col-md-6 col-lg-4 mb-4';
+        card.innerHTML = `
+          <div class="card planta-card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title mb-0">${planta.nombre}</h5>
+                <span class="badge bg-${planta.proposito === 'medicinal' ? 'primary' : 'success'}">
+                  ${planta.proposito === 'medicinal' ? 'Medicinal' : 'Alimenticio'}
+                </span>
+              </div>
+              
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="fas fa-seedling me-1"></i> ${planta.variedad.charAt(0).toUpperCase() + planta.variedad.slice(1)}</span>
+                <span><i class="fas fa-calendar-day me-1"></i> ${new Date(planta.fechaSiembra).toLocaleDateString()}</span>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Progreso</span>
+                  <span>${planta.progreso}%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: ${planta.progreso}%" 
+                    aria-valuenow="${planta.progreso}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-between small mb-3">
+                <span class="badge badge-etapa">${planta.etapa}</span>
+                <span><i class="fas fa-thermometer-half me-1"></i> Ideal: ${planta.tempIdeal}°C</span>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <button class="btn btn-sm btn-outline-success" onclick="verDetallesPlanta(${planta.id})">
+                  <i class="fas fa-chart-line me-1"></i> Monitorear
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        plantasContainer.appendChild(card);
+      });
+    }
+    
+    // Función para guardar nueva planta
+    async function guardarPlanta() {
+      const nombre = document.getElementById('nombrePlanta').value;
+      const variedad = document.getElementById('variedad').value;
+      const fechaSiembra = document.getElementById('fechaSiembra').value;
+      const proposito = document.getElementById('proposito').value;
+      const notas = document.getElementById('notasPlanta').value;
+      
+      if (!nombre || !variedad || !fechaSiembra || !proposito) {
+        alert('Por favor complete todos los campos obligatorios');
+        return;
+      }
+      
+      try {
+        // En producción, usarías fetch para enviar al backend
+        const nuevaPlanta = {
+          id: plantas.length + 1,
+          nombre,
+          variedad,
+          fechaSiembra,
+          proposito,
+          notas,
+          progreso: 0,
+          etapa: "Germinación",
+          tempIdeal: proposito === 'medicinal' ? 22 : 24,
+          humedadIdeal: proposito === 'medicinal' ? 45 : 55
+        };
+        
+        plantas.push(nuevaPlanta);
+        mostrarPlantas();
+        
+        // Cerrar modal y limpiar formulario
+        const modal = bootstrap.Modal.getInstance(document.getElementById('nuevaPlantaModal'));
+        modal.hide();
+        document.getElementById('plantaForm').reset();
+        
+      } catch (error) {
+        console.error("Error al guardar planta:", error);
+        alert("Hubo un error al guardar la planta");
+      }
+    }
+    
+    // Función para obtener datos climáticos
+    async function obtenerClima() {
+      try {
+        // Simulación de API del clima
+        // En producción, usarías: const response = await fetch('/api/clima');
+        // condicionesClima = await response.json();
+        
+        condicionesClima = {
+          temperatura: 23.5,
+          humedad: 58,
+          condiciones: "Parcialmente nublado",
+          alertas: [
+            "Temperatura cercana al límite superior para plantas en floración"
+          ],
+          recomendaciones: [
+            "Reducir temperatura en 2°C para plantas en floración",
+            "Regar plantas en la mañana para evitar humedad nocturna"
+          ]
+        };
+        
+        actualizarClimaUI();
+      } catch (error) {
+        console.error("Error al obtener clima:", error);
+      }
+    }
+    
+    // Función para actualizar la UI con datos climáticos
+    function actualizarClimaUI() {
+      if (!condicionesClima) return;
+      
+      document.getElementById('tempActual').textContent = `${condicionesClima.temperatura}°C`;
+      document.getElementById('humedadActual').textContent = `Humedad: ${condicionesClima.humedad}%`;
+      
+      // Actualizar alertas
+      const alertasContainer = document.getElementById('alertasContainer');
+      alertasContainer.innerHTML = '';
+      
+      if (condicionesClima.alertas && condicionesClima.alertas.length > 0) {
+        condicionesClima.alertas.forEach(alerta => {
+          const div = document.createElement('div');
+          div.className = 'alert alert-warning';
+          div.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${alerta}`;
+          alertasContainer.appendChild(div);
+        });
+      } else {
+        alertasContainer.innerHTML = `
+          <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> Condiciones dentro de los parámetros normales
+          </div>
+        `;
+      }
+    }
+    
+    // Función para actualizar el modal de clima
+    function actualizarModalClima() {
+      if (!condicionesClima) return;
+      
+      document.getElementById('temperaturaActual').textContent = `${condicionesClima.temperatura}°C`;
+      document.getElementById('condicionesClima').textContent = condicionesClima.condiciones;
+      
+      // Alertas
+      const alertasClima = document.getElementById('alertasClima');
+      alertasClima.innerHTML = '';
+      
+      if (condicionesClima.alertas && condicionesClima.alertas.length > 0) {
+        condicionesClima.alertas.forEach(alerta => {
+          const div = document.createElement('div');
+          div.className = 'mb-2';
+          div.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i> ${alerta}`;
+          alertasClima.appendChild(div);
+        });
+      } else {
+        alertasClima.innerHTML = '<p>No hay alertas climáticas activas</p>';
+      }
+      
+      // Recomendaciones
+      const recomendacionesClima = document.getElementById('recomendacionesClima');
+      recomendacionesClima.innerHTML = '';
+      
+      if (condicionesClima.recomendaciones && condicionesClima.recomendaciones.length > 0) {
+        condicionesClima.recomendaciones.forEach(recomendacion => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i> ${recomendacion}`;
+          recomendacionesClima.appendChild(li);
+        });
+      } else {
+        recomendacionesClima.innerHTML = '<li class="list-group-item">No hay recomendaciones específicas</li>';
+      }
+    }
+    
+    // Función para inicializar gráfico
+    function inicializarChart() {
+      const ctx = document.getElementById('historicoChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Temperatura (°C)',
+              data: [22, 23, 24, 25, 24, 23],
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              tension: 0.1
+            },
+            {
+              label: 'Humedad (%)',
+              data: [60, 58, 55, 52, 50, 48],
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Histórico de Condiciones Ambientales'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    }
+    
+    // Función para ver detalles de planta
+    function verDetallesPlanta(id) {
+      const planta = plantas.find(p => p.id === id);
+      if (!planta) return;
+      
+      // Aquí podrías abrir un modal con los detalles completos
+      alert(`Detalles de ${planta.nombre}\nVariedad: ${planta.variedad}\nEtapa: ${planta.etapa}\nTemp. Ideal: ${planta.tempIdeal}°C`);
+    }
+  </script>
+</body>
+</html>
