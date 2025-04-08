@@ -1,6 +1,17 @@
 {
+  "name": "Mi_Plantita_Feliz",
+  "version": "1.0.0",
+  "description": "Descripción de tu aplicación",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Alfredo Gonzale",
+  "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
-    "mysql2": "^3.12.0"
+    "mysql2": "^3.12.0",
+    "body-parser": "^1.20.2",
+    "path": "^0.12.7"
   }
 }
