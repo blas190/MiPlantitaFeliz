@@ -6,7 +6,6 @@
   <title>Monitoreo de Cannabis Medicinal</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="estilos.css">
   <style>
     :root {
       --verde-primario: #28a745;
@@ -61,7 +60,7 @@
   </style>
 </head>
 <body>
-  <!-- Navbar modificado -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="#">
@@ -90,58 +89,72 @@
           <li class="nav-item"><a class="nav-link" href="#mis-plantas">Mis Plantas</a></li>
           <li class="nav-item"><a class="nav-link" href="#monitoreo">Monitoreo</a></li>
           <li class="nav-item"><a class="nav-link" href="#calendario">Calendario</a></li>
-          <!-- Panel de administración (visible solo para administradores) -->
           <li class="nav-item" id="adminPanelLink"><a class="nav-link" href="ad.html">Administración</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Modal de autenticación (se mantiene igual) -->
-  <div class="modal fade" id="authModal" tabindex="-1">
-    <!-- Modal de autenticación -->
-<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Iniciar sesión o Registrarse</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="authTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" 
-                    data-bs-target="#login" type="button" role="tab">
-              <i class="fas fa-sign-in-alt"></i> Iniciar sesión
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="register-tab" data-bs-toggle="tab" 
-                    data-bs-target="#register" type="button" role="tab">
-              <i class="fas fa-user-plus"></i> Registrarse
-            </button>
-          </li>
-        </ul>
-        
-        <div class="tab-content mt-3">
-          <!-- Formulario de inicio de sesión -->
-          <div class="tab-pane fade show active" id="login" role="tabpanel">
-            <form id="loginForm">
-              <!-- Campos del formulario -->
-            </form>
-          </div>
+  <!-- Modal de autenticación -->
+  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Iniciar sesión o Registrarse</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="authTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" 
+                      data-bs-target="#login" type="button" role="tab">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="register-tab" data-bs-toggle="tab" 
+                      data-bs-target="#register" type="button" role="tab">
+                <i class="fas fa-user-plus"></i> Registrarse
+              </button>
+            </li>
+          </ul>
           
-          <!-- Formulario de registro -->
-          <div class="tab-pane fade" id="register" role="tabpanel">
-            <form id="registerForm">
-              <!-- Campos del formulario -->
-            </form>
+          <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label for="loginEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Ingresar</button>
+              </form>
+            </div>
+            
+            <div class="tab-pane fade" id="register" role="tabpanel">
+              <form id="registerForm">
+                <div class="mb-3">
+                  <label for="registerName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="registerName" required>
+                </div>
+                <div class="mb-3">
+                  <label for="registerEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="registerEmail" required>
+                </div>
+                <div class="mb-3">
+                  <label for="registerPassword" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
   </div>
 
   <!-- Modal para agregar nueva planta -->
@@ -199,33 +212,33 @@
     </div>
   </div>
 
-  <!-- Modal de monitoreo climático -->
+  <!-- Modal de monitoreo climático (ACTUALIZADO) -->
   <div class="modal fade" id="climaModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-info text-white">
-          <h5 class="modal-title">Condiciones Climáticas</h5>
+          <h5 class="modal-title">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            <span id="ubicacionClima">Condiciones Climáticas</span>
+          </h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-          <div class="text-center mb-4">
-            <i class="fas fa-cloud-sun fa-4x text-info mb-3"></i>
-            <h3 id="temperaturaActual">Cargando...</h3>
-            <p id="condicionesClima"></p>
-          </div>
-          <div class="alert alert-warning" id="alertasClima">
-            <!-- Alertas dinámicas se insertarán aquí -->
-          </div>
-          <h5 class="mt-4">Recomendaciones</h5>
-          <ul class="list-group" id="recomendacionesClima">
-            <!-- Recomendaciones dinámicas -->
-          </ul>
+        <div class="modal-body" id="climaModalBody">
+          <!-- Contenido dinámico se insertará aquí -->
+        </div>
+        <div class="modal-footer">
+          <small class="text-muted me-auto">
+            <i class="fas fa-sync-alt"></i> Actualizado: <span id="horaActualizacion"></span>
+          </small>
+          <button type="button" class="btn btn-info" onclick="obtenerClima()">
+            <i class="fas fa-sync me-1"></i> Actualizar
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Sección Hero modificada -->
+  <!-- Sección Hero -->
   <section class="hero" id="inicio">
     <div class="container text-center">
       <h1 class="display-4 fw-bold">Monitoreo de Cannabis Medicinal</h1>
@@ -252,7 +265,6 @@
       </div>
       
       <div class="row" id="plantasContainer">
-        <!-- Plantas se cargarán dinámicamente aquí -->
         <div class="col-12 text-center py-5" id="sinPlantas">
           <i class="fas fa-seedling fa-4x text-muted mb-3"></i>
           <h4 class="text-muted">No tienes plantas registradas</h4>
@@ -386,43 +398,197 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // 1. CONFIGURACIÓN API CLIMA
+    const OPENWEATHER_API_KEY = 'tu_api_key_aqui'; // 🔑 Reemplaza con tu clave real
+    const OPENWEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather';
+    
     // Variables de estado
     let plantas = [];
     let currentUser = null;
     let condicionesClima = null;
     
-    // Elementos del DOM
-    const plantasContainer = document.getElementById('plantasContainer');
-    const sinPlantas = document.getElementById('sinPlantas');
-    const climaBtn = document.getElementById('climaBtn');
-    
-    // Verificar autenticación al cargar
-    document.addEventListener('DOMContentLoaded', () => {
-      checkAuth();
-      cargarPlantas();
-      obtenerClima();
-      inicializarChart();
+    // 2. FUNCIONES AUXILIARES PARA CLIMA
+    function generarAlertasClima(temperatura, humedad) {
+      const alertas = [];
       
-      // Configurar evento para guardar planta
-      document.getElementById('guardarPlanta').addEventListener('click', guardarPlanta);
+      if (temperatura > 30) {
+        alertas.push("Temperatura muy alta para cultivo de cannabis");
+      } else if (temperatura < 18) {
+        alertas.push("Temperatura muy baja para crecimiento óptimo");
+      }
       
-      // Configurar evento para botón de clima
-      climaBtn.addEventListener('click', () => {
-        actualizarModalClima();
+      if (humedad > 70) {
+        alertas.push("Humedad elevada - riesgo de hongos");
+      } else if (humedad < 40) {
+        alertas.push("Humedad muy baja - plantas pueden estresarse");
+      }
+      
+      return alertas.length > 0 ? alertas : ["Condiciones dentro de parámetros normales"];
+    }
+
+    function generarRecomendaciones(temperatura, humedad) {
+      const recomendaciones = [];
+      
+      if (temperatura > 28) {
+        recomendaciones.push("Considera aumentar la ventilación o sombrear las plantas");
+        recomendaciones.push("Riega en las horas más frescas del día");
+      } else if (temperatura < 20) {
+        recomendaciones.push("Protege las plantas de las corrientes frías");
+        recomendaciones.push("Considera usar un sistema de calefacción suave");
+      }
+      
+      if (humedad > 65) {
+        recomendaciones.push("Aumenta la circulación de aire para reducir humedad");
+        recomendaciones.push("Reduce la frecuencia de riego");
+      } else if (humedad < 45) {
+        recomendaciones.push("Usa un humidificador o bandejas con agua");
+        recomendaciones.push("Rocía las plantas por la mañana");
+      }
+      
+      if (recomendaciones.length === 0) {
+        recomendaciones.push("Condiciones ideales - mantén el cuidado actual");
+      }
+      
+      return recomendaciones;
+    }
+
+    function getWeatherIcon(description) {
+      const desc = description.toLowerCase();
+      if (desc.includes('lluvia')) return 'fa-cloud-rain';
+      if (desc.includes('nublado')) return 'fa-cloud';
+      if (desc.includes('soleado')) return 'fa-sun';
+      if (desc.includes('nieve')) return 'fa-snowflake';
+      return 'fa-cloud-sun';
+    }
+
+    function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("Geolocalización no soportada"));
+        } else {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        }
       });
-    });
-    
-    // Función para verificar autenticación
+    }
+
+    // 3. FUNCIÓN PRINCIPAL PARA OBTENER CLIMA (ACTUALIZADA)
+    async function obtenerClima() {
+      try {
+        const position = await getLocation();
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const units = 'metric';
+        
+        const response = await fetch(`${OPENWEATHER_URL}?lat=${lat}&lon=${lon}&units=${units}&appid=${OPENWEATHER_API_KEY}&lang=es`);
+        
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        
+        const data = await response.json();
+        
+        condicionesClima = {
+          temperatura: data.main.temp,
+          humedad: data.main.humidity,
+          condiciones: data.weather[0].description,
+          viento: (data.wind.speed * 3.6).toFixed(1),
+          ciudad: data.name,
+          alertas: generarAlertasClima(data.main.temp, data.main.humidity),
+          recomendaciones: generarRecomendaciones(data.main.temp, data.main.humidity),
+          ultimaActualizacion: new Date().toLocaleTimeString()
+        };
+        
+        actualizarClimaUI();
+        actualizarModalClima();
+      } catch (error) {
+        console.error("Error al obtener clima:", error);
+        condicionesClima = {
+          temperatura: '--',
+          humedad: '--',
+          condiciones: "Error obteniendo datos climáticos",
+          alertas: ["Active la ubicación para datos precisos"],
+          recomendaciones: ["Verifique permisos de ubicación o conexión"],
+          ultimaActualizacion: new Date().toLocaleTimeString()
+        };
+        actualizarClimaUI();
+        actualizarModalClima();
+      }
+    }
+
+    // 4. FUNCIÓN PARA ACTUALIZAR MODAL DE CLIMA (ACTUALIZADA)
+    function actualizarModalClima() {
+      if (!condicionesClima) return;
+      
+      const modalBody = document.getElementById('climaModalBody');
+      const ubicacion = document.getElementById('ubicacionClima');
+      const horaActualizacion = document.getElementById('horaActualizacion');
+      
+      modalBody.innerHTML = `
+        <div class="text-center mb-4">
+          <i class="fas ${getWeatherIcon(condicionesClima.condiciones)} fa-4x mb-3"></i>
+          <h3 id="temperaturaActual">${condicionesClima.temperatura}°C</h3>
+          <p id="condicionesClima">${capitalizeFirstLetter(condicionesClima.condiciones)}</p>
+          <div class="row mt-3">
+            <div class="col-6">
+              <p><i class="fas fa-tint"></i> Humedad: ${condicionesClima.humedad}%</p>
+            </div>
+            <div class="col-6">
+              <p><i class="fas fa-wind"></i> Viento: ${condicionesClima.viento || '--'} km/h</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alert ${condicionesClima.alertas[0].includes('normales') ? 'alert-success' : 'alert-warning'}">
+          <i class="fas ${condicionesClima.alertas[0].includes('normales') ? 'fa-check-circle' : 'fa-exclamation-triangle'} me-2"></i>
+          ${condicionesClima.alertas[0]}
+        </div>
+        
+        <h5 class="mt-4">Recomendaciones</h5>
+        <ul class="list-group" id="recomendacionesClima">
+          ${condicionesClima.recomendaciones.map(rec => `
+            <li class="list-group-item">
+              <i class="fas fa-check-circle text-success me-2"></i> ${rec}
+            </li>
+          `).join('')}
+        </ul>
+      `;
+      
+      ubicacion.textContent = condicionesClima.ciudad || 'Tu ubicación actual';
+      horaActualizacion.textContent = condicionesClima.ultimaActualizacion;
+    }
+
+    // 5. FUNCIÓN PARA ACTUALIZAR UI DE CLIMA
+    function actualizarClimaUI() {
+      if (!condicionesClima) return;
+      
+      document.getElementById('tempActual').textContent = `${condicionesClima.temperatura}°C`;
+      document.getElementById('humedadActual').textContent = `Humedad: ${condicionesClima.humedad}%`;
+      
+      const alertasContainer = document.getElementById('alertasContainer');
+      alertasContainer.innerHTML = '';
+      
+      if (condicionesClima.alertas && condicionesClima.alertas.length > 0) {
+        condicionesClima.alertas.forEach(alerta => {
+          const div = document.createElement('div');
+          div.className = 'alert alert-warning';
+          div.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${alerta}`;
+          alertasContainer.appendChild(div);
+        });
+      }
+    }
+
+    // 6. FUNCIONES EXISTENTES DEL SISTEMA
     function checkAuth() {
       const user = localStorage.getItem('currentUser');
       if (user) {
         currentUser = JSON.parse(user);
-        climaBtn.classList.remove('d-none');
+        document.getElementById('climaBtn').classList.remove('d-none');
         actualizarUI();
       }
     }
-    
-    // Función para actualizar la interfaz
+
     function actualizarUI() {
       const loginBtn = document.getElementById('loginBtn');
       
@@ -441,24 +607,17 @@
         document.getElementById('logoutBtn').addEventListener('click', logout);
       }
     }
-    
-    // Función para cerrar sesión
+
     function logout() {
       localStorage.removeItem('currentUser');
       currentUser = null;
       window.location.reload();
     }
-    
-    // Función para cargar plantas desde el backend
+
     async function cargarPlantas() {
       if (!currentUser) return;
       
       try {
-        // Simulación de carga desde API
-        // En producción, usarías: const response = await fetch(`/api/plantas?usuario=${currentUser.id}`);
-        // plantas = await response.json();
-        
-        // Datos de ejemplo
         plantas = [
           {
             id: 1,
@@ -489,17 +648,17 @@
         console.error("Error al cargar plantas:", error);
       }
     }
-    
-    // Función para mostrar plantas en la interfaz
+
     function mostrarPlantas() {
       if (plantas.length === 0) {
-        sinPlantas.style.display = 'block';
-        plantasContainer.innerHTML = '';
+        document.getElementById('sinPlantas').style.display = 'block';
+        document.getElementById('plantasContainer').innerHTML = '';
         return;
       }
       
-      sinPlantas.style.display = 'none';
-      plantasContainer.innerHTML = '';
+      document.getElementById('sinPlantas').style.display = 'none';
+      const container = document.getElementById('plantasContainer');
+      container.innerHTML = '';
       
       plantas.forEach(planta => {
         const card = document.createElement('div');
@@ -543,11 +702,10 @@
             </div>
           </div>
         `;
-        plantasContainer.appendChild(card);
+        container.appendChild(card);
       });
     }
-    
-    // Función para guardar nueva planta
+
     async function guardarPlanta() {
       const nombre = document.getElementById('nombrePlanta').value;
       const variedad = document.getElementById('variedad').value;
@@ -561,7 +719,6 @@
       }
       
       try {
-        // En producción, usarías fetch para enviar al backend
         const nuevaPlanta = {
           id: plantas.length + 1,
           nombre,
@@ -578,7 +735,6 @@
         plantas.push(nuevaPlanta);
         mostrarPlantas();
         
-        // Cerrar modal y limpiar formulario
         const modal = bootstrap.Modal.getInstance(document.getElementById('nuevaPlantaModal'));
         modal.hide();
         document.getElementById('plantaForm').reset();
@@ -588,99 +744,7 @@
         alert("Hubo un error al guardar la planta");
       }
     }
-    
-    // Función para obtener datos climáticos
-    async function obtenerClima() {
-      try {
-        // Simulación de API del clima
-        // En producción, usarías: const response = await fetch('/api/clima');
-        // condicionesClima = await response.json();
-        
-        condicionesClima = {
-          temperatura: 23.5,
-          humedad: 58,
-          condiciones: "Parcialmente nublado",
-          alertas: [
-            "Temperatura cercana al límite superior para plantas en floración"
-          ],
-          recomendaciones: [
-            "Reducir temperatura en 2°C para plantas en floración",
-            "Regar plantas en la mañana para evitar humedad nocturna"
-          ]
-        };
-        
-        actualizarClimaUI();
-      } catch (error) {
-        console.error("Error al obtener clima:", error);
-      }
-    }
-    
-    // Función para actualizar la UI con datos climáticos
-    function actualizarClimaUI() {
-      if (!condicionesClima) return;
-      
-      document.getElementById('tempActual').textContent = `${condicionesClima.temperatura}°C`;
-      document.getElementById('humedadActual').textContent = `Humedad: ${condicionesClima.humedad}%`;
-      
-      // Actualizar alertas
-      const alertasContainer = document.getElementById('alertasContainer');
-      alertasContainer.innerHTML = '';
-      
-      if (condicionesClima.alertas && condicionesClima.alertas.length > 0) {
-        condicionesClima.alertas.forEach(alerta => {
-          const div = document.createElement('div');
-          div.className = 'alert alert-warning';
-          div.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i> ${alerta}`;
-          alertasContainer.appendChild(div);
-        });
-      } else {
-        alertasContainer.innerHTML = `
-          <div class="alert alert-success">
-            <i class="fas fa-check-circle me-2"></i> Condiciones dentro de los parámetros normales
-          </div>
-        `;
-      }
-    }
-    
-    // Función para actualizar el modal de clima
-    function actualizarModalClima() {
-      if (!condicionesClima) return;
-      
-      document.getElementById('temperaturaActual').textContent = `${condicionesClima.temperatura}°C`;
-      document.getElementById('condicionesClima').textContent = condicionesClima.condiciones;
-      
-      // Alertas
-      const alertasClima = document.getElementById('alertasClima');
-      alertasClima.innerHTML = '';
-      
-      if (condicionesClima.alertas && condicionesClima.alertas.length > 0) {
-        condicionesClima.alertas.forEach(alerta => {
-          const div = document.createElement('div');
-          div.className = 'mb-2';
-          div.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i> ${alerta}`;
-          alertasClima.appendChild(div);
-        });
-      } else {
-        alertasClima.innerHTML = '<p>No hay alertas climáticas activas</p>';
-      }
-      
-      // Recomendaciones
-      const recomendacionesClima = document.getElementById('recomendacionesClima');
-      recomendacionesClima.innerHTML = '';
-      
-      if (condicionesClima.recomendaciones && condicionesClima.recomendaciones.length > 0) {
-        condicionesClima.recomendaciones.forEach(recomendacion => {
-          const li = document.createElement('li');
-          li.className = 'list-group-item';
-          li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i> ${recomendacion}`;
-          recomendacionesClima.appendChild(li);
-        });
-      } else {
-        recomendacionesClima.innerHTML = '<li class="list-group-item">No hay recomendaciones específicas</li>';
-      }
-    }
-    
-    // Función para inicializar gráfico
+
     function inicializarChart() {
       const ctx = document.getElementById('historicoChart').getContext('2d');
       new Chart(ctx, {
@@ -723,15 +787,26 @@
         }
       });
     }
-    
-    // Función para ver detalles de planta
+
     function verDetallesPlanta(id) {
       const planta = plantas.find(p => p.id === id);
       if (!planta) return;
       
-      // Aquí podrías abrir un modal con los detalles completos
       alert(`Detalles de ${planta.nombre}\nVariedad: ${planta.variedad}\nEtapa: ${planta.etapa}\nTemp. Ideal: ${planta.tempIdeal}°C`);
     }
+
+    // 7. INICIALIZACIÓN AL CARGAR LA PÁGINA
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      cargarPlantas();
+      obtenerClima();
+      inicializarChart();
+      
+      document.getElementById('guardarPlanta').addEventListener('click', guardarPlanta);
+      document.getElementById('climaBtn').addEventListener('click', () => {
+        actualizarModalClima();
+      });
+    });
   </script>
 </body>
 </html>
